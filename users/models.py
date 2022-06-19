@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from classroom.models import Classroom
+from forum.models import Answer
 
 grades = (
     (8,8),
@@ -59,3 +60,14 @@ class CommentNotification(models.Model):
 
     def __str__(self):
         return f"{self.comment.author} commented on {self.comment.project.user.first_name} {self.comment.project.user.last_name}'s project."
+
+# answer notification model
+class AnswerNotification(models.Model):
+    answer = models.OneToOneField(Answer,on_delete=models.CASCADE)
+    notified_user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='answer_notifications')
+
+    #def get_absolute_url(self):
+    #    return reverse('answer-details',kwargs={'pk':self.category.pk})
+
+    def __str__(self):
+        return f"{self.answer.author.first_name} {self.answer.author.last_name} responded to {self.answer.question.author.first_name} {self.answer.question.author.last_name}'s question"
